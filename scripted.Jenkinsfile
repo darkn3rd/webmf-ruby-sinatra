@@ -1,4 +1,4 @@
-node('docker') {
+node {
   checkout scm
   def ruby = docker.image('ruby:2.6.1')
 
