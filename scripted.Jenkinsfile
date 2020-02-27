@@ -1,6 +1,12 @@
 node('docker') {
   checkout scm
-  def ruby = docker.image('ruby')
+  def ruby = docker.image('ruby:2.6.1')
+
+  stage('Requirements') {
+    ruby.inside {
+      sh 'gem install bundler -v 2.0.1'
+    }
+  }
 
   stage('Build') {
     ruby.inside {
