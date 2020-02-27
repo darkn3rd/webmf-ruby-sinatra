@@ -1,25 +1,17 @@
 node {
-  def ruby = docker.image('ruby:2.6.1')
+  checkout scm
+ 
+  stage 'Build'
+  def docker_image = docker.build("webmf/ruby-sinatra:${env.BUILD_ID}", '.')
 
-  ruby.image('ruby:2.6.1').inside {
-    checkout scm
-
-    stage('Requirements') {
-      sh 'gem install bundler -v 2.0.1'
-    }
-
-    stage('Build') {
-      sh 'bundle install'
-    }
-    
+  stage 'Test'
+  docker_image.inside {
     try {
-      stage('Test') {
-        sh 'rake ci:all'
-      }
+      sh 'rake ci:all'
     } catch (e) {
       echo 'Tests have failed!'
     } finally {
-        junit 'test/reports/TEST-AppTest.xml'
+      junit 'test/reports/TEST-AppTest.xml'
     }
   }
 }
