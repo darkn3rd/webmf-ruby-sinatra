@@ -13,12 +13,12 @@ node('docker') {
       ruby.inside {
         sh 'rake ci:all'
       }
-    } catch (e) {
-      echo 'Tests have failed!'
-    } finally {
-      ruby.inside {
-        junit 'test/reports/TEST-AppTest.xml'
-      }
+    }
+  } catch (e) {
+    echo 'Tests have failed!'
+  } finally {
+    ruby.inside {
+      junit 'test/reports/TEST-AppTest.xml'
     }
   }
 }
