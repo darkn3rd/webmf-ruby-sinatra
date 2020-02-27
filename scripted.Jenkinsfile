@@ -1,8 +1,9 @@
 node {
-  checkout scm
   def ruby = docker.image('ruby:2.6.1')
 
   ruby.image('ruby:2.6.1').inside {
+    checkout scm
+
     stage('Requirements') {
       sh 'gem install bundler -v 2.0.1'
     }
