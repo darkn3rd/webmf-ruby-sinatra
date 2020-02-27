@@ -2,29 +2,23 @@ node {
   checkout scm
   def ruby = docker.image('ruby:2.6.1')
 
-  stage('Requirements') {
-    ruby.inside {
+  ruby.image('ruby:2.6.1').inside {
+    stage('Requirements') {
       sh 'gem install bundler -v 2.0.1'
     }
-  }
 
-  stage('Build') {
-    ruby.inside {
+    stage('Build') {
       sh 'bundle install'
     }
-  }
-  
-  try {
-    stage('Test') {
-      ruby.inside {
+    
+    try {
+      stage('Test') {
         sh 'rake ci:all'
       }
-    }
-  } catch (e) {
-    echo 'Tests have failed!'
-  } finally {
-    ruby.inside {
-      junit 'test/reports/TEST-AppTest.xml'
+    } catch (e) {
+      echo 'Tests have failed!'
+    } finally {
+        junit 'test/reports/TEST-AppTest.xml'
     }
   }
 }
